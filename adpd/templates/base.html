@@ -1,113 +1,316 @@
-{% load static i18n %}<!DOCTYPE html>
+{% load static i18n %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% block title %}Asociatia dinamovisti pentru Dinamo{% endblock title %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <![endif]-->
-
-    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}">
-
-    {% block css %}
-
-    <!-- Latest compiled and minified Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-
-    <!-- Your stuff: Third-party CSS libraries go here -->
-
-    <!-- This file stores project-specific CSS -->
-
-    <link href="{% static 'css/project.min.css' %}" rel="stylesheet">
-
-
-    {% endblock %}
-
-  </head>
-
-  <body>
-
-    <div class="mb-1">
-      <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="{% url 'home' %}">Asociatia Dinamovisti pentru Dinamo</a>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'about' %}">About</a>
-            </li>
-            {% if request.user.is_authenticated %}
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
-              </li>
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
-              </li>
-            {% else %}
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-              </li>
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-      </nav>
-
+<head>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="{% static 'assets/img/apple-icon.png' %}">
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>{% block title %}Asociația dinamoviști pentru Dinamo{% endblock title %}</title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Material+Icons" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <!-- CSS Files -->
+  <link href="{% static 'assets/css/material-kit.css' %}" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="{% static 'assets/demo/demo.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/adpd.css' %}" rel="stylesheet" />
+</head>
+<body class="landing-page sidebar-collapse" id="mainly">
+  <nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-md" color-on-scroll="100" id="sectionsNav">
+    <div class="container">
+      <div class="navbar-translate">
+        <a class="navbar-brand" href="/">
+          <div class="d-block d-sm-block d-md-none d-lg-none">
+            <div class="logo-big">
+              <img src="{% static 'images/logos/adpd_alb.png' %}" class="img-fluid">
+            </div>
+          </div>
+          <div class="logo-small">
+            <img src="{% static 'images/logos/adpd_alb_fundal_rosu.png' %}" class="img-fluid">
+          </div>
+        </a>
+      </div>
     </div>
-
+  </nav>
+  <div class="page-header" style="background-image: url({% static 'images/landing.png' %})">
     <div class="container">
 
-      {% if messages %}
-          {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
-          {% endfor %}
-      {% endif %}
+      {% block intro %}
+      <div class="row" id="testing">
+        <div class="d-none d-sm-none d-md-block col-md-3 align-self-center">
+          <img src="{% static 'images/logoADPD.png' %}" alt="Thumbnail Image" class="rounded-circle img-fluid">
+        </div>
+        <div class="col-md-9">
+          {% if request.user.is_authenticated %}
+          <h1 class="title">Bine ai venit în familia Dinamo!</h1>
+          {% else %}
+          <h1 class="title">Totul pentru Dinamo!</h1>
+          {% endif %}
+          <h4>De multă vreme noi, suporterii, avem nemulțumiri în legătură cu deciziile luate de către conducerea clubului. Lucrurile nu par să se îmbunătățească odată cu trecerea anilor, ci chiar să devină mai rele. În acest context, un grup de suporteri a venit cu ideea de a da o voce relevantă tuturor celor ce iubesc Dinamo.<br>
+          Alătură-te ADPD și fă parte cu adevărat din istoria lui Dinamo!</h4>
+          {% if request.user.is_authenticated %}
 
-      {% block content %}
-        <p>Use this document as a way to quick start any new project.</p>
-      {% endblock content %}
+          <form method="post" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+            {% endif %}
+            <button class="btn btn-primary-inv btn-round" type="submit">{% trans 'Sign Out' %}</button>
+          </form>
 
-    </div> <!-- /container -->
+          {% else %}
+          <button class="btn btn-primary-inv btn-round" data-toggle="modal" data-target="#loginModal" href="{% url 'account_login' %}">Autentificare</button>
+          {% endif %}
+        </div>
 
-    {% block modal %}{% endblock modal %}
+      </div>
+      {% endblock %}
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    {% block javascript %}
-
-      <!-- Bootstrap JS and its dependencies-->
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-      <!-- Your stuff: Third-party javascript libraries go here -->
-
-
-      <!-- place project specific Javascript in this file -->
-
-      <script src="{% static 'js/project.js' %}"></script>
+    </div>
+  </div>
 
 
-    {% endblock javascript %}
-  </body>
+  <!--   <div class="main main-raised">
+    *********    PRICING 3     *********
+      <div class="pricing-1 section-image" style="background-image: url({% static 'images/fundal1.jpg' %})" id="pricing-1">-->
+      <div class="pricing-5" id="pricing-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 ml-auto mr-auto text-center">
+              <h2 class="title">Înscrie-te acum!</h2>
+              <h5 class="description">Lista beneficiilor oferite de către asociație membrilor săi va suferi modificări substanțiale pe măsură ce Asociația va avea contracte de colaborare cu diferiți parteneri.</h5>
+              <!--<div class="section-space"></div>-->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 ml-auto">
+              <div class="card card-pricing">
+                <div class="card-body ">
+                  <h6 class="card-category">Seniori</h6>
+                  <h1 class="card-title">
+                    <small>RON</small>150
+                    <small>/an</small>
+                  </h1>
+                  <ul>
+                    <li>
+                      posibilitatea de a cumpăra cu reduceri tricouri, echipamente sportive, efecte</li>
+                    <li>
+                      participarea la activitățile sportive și sociale, recreative, culturale sau științifice, pe care Asociația le organizează</li>
+                  </ul>
+                  <a href="#pablo" class="btn btn-primary btn-round">
+                    Get Started
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mr-auto">
+              <div class="card card-pricing card-raised bg-primary">
+                <div class="card-body">
+                  <h6 class="card-category">Adulți</h6>
+                  <h1 class="card-title">
+                    <small>RON</small>400
+                    <small>/an</small>
+                  </h1>
+                  <ul>
+                    <li>
+                      posibilitatea de a cumpăra cu reduceri tricouri, echipamente sportive, efecte</li>
+                    <li>
+                      participarea la activitățile sportive și sociale, recreative, culturale sau științifice, pe care Asociația le organizează</li>
+                  </ul>
+                  <a href="#pablo" class="btn btn-white btn-round">
+                    Get Started
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 ml-auto">
+              <div class="card card-pricing">
+                <div class="card-body ">
+                  <h6 class="card-category">Copii</h6>
+                  <h1 class="card-title">
+                    <small>RON</small>100
+                    <small>/an</small>
+                  </h1>
+                  <ul>
+                    <li>
+                      posibilitatea de a cumpăra cu reduceri tricouri, echipamente sportive, efecte</li>
+                    <li>
+                      participarea la activitățile sportive și sociale, recreative, culturale sau științifice, pe care Asociația le organizează</li>
+                  </ul>
+                  <a href="#pablo" class="btn btn-primary btn-round">
+                    Get Started
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--</div>     *********    END PRICING 3      *********      -->
+
+
+
+{% if request.user.is_authenticated %}
+
+{% else %}
+  <div class="modal fade" id="loginModal" tabindex="-1" role="">
+      <div class="modal-dialog modal-login" role="document">
+          <div class="modal-content">
+              <div class="card card-signup card-plain">
+                  <div class="modal-header">
+                    <div class="card-header card-header-primary text-center">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                      </button>
+                      <h4 class="card-title">Autentificare</h4>
+                      <div class="social-line">
+
+                    </div>
+                    </div>
+                  </div>
+                  <div class="modal-body">
+
+                    <form id="logare" class="login" method="POST" action="{% url 'account_login' %}">
+                      {% csrf_token %}
+                      <div class="card-body">
+                        <div class="form-group bmd-form-group">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="material-icons">face</i></div>
+                              </div>
+                              <input type="text"
+                                  name="login"
+                                  {% if form.login.input_type != "hidden" %}
+                                      class="form-control"
+                                      id="id_login"
+                                  {% endif %}
+                                  {{ form.login.flat_attrs|safe }}
+                                  placeholder="Utilizator..."
+                                  />
+                          </div>
+                        </div>
+                        <div class="form-group bmd-form-group">
+                          <p>{{form.login.errors}}</p>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="material-icons">lock_outline</i></div>
+                              </div>
+                              <input type="password"
+                                  name="password"
+                                  {% if form.password.input_type != "hidden" %}
+                                      class="form-control"
+                                      id="id_password"
+                                  {% endif %}
+                                  {{ form.password.flat_attrs|safe }}
+                                  placeholder="Parolă..."
+                                  />
+                          </div>
+                        </div>
+                        {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        {% endif %}
+                        <button id="confirma" class="btn btn-primary btn-round">{% trans "Confirmă" %}</button>
+                      </div>
+                    </form>
+                  </div>
+          </div>
+      </div>
+  </div>
+</div>
+{% endif %}
+
+  <!--   Core JS Files   -->
+  <script src="{% static 'assets/js/core/jquery.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'assets/js/core/popper.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'assets/js/core/bootstrap-material-design.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'assets/js/plugins/moment.min.js' %}"></script>
+  <!--	Plugin for the Datepicker, full documentation here: https://github.com/Eonasdan/bootstrap-datetimepicker -->
+  <script src="{% static 'assets/js/plugins/bootstrap-datetimepicker.js' %}" type="text/javascript"></script>
+  <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+  <script src="{% static 'assets/js/plugins/nouislider.min.js' %}" type="text/javascript"></script>
+  <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+  <script src="{% static 'assets/js/material-kit.js' %}" type="text/javascript"></script>
+
+  {% block javascript %}
+
+  <script type="text/javascript">
+
+  // $(document).on('submit', '#logare', function(e){
+  $(document).on('submit', '#loginModal', function(e){
+    $('#loginModal').on('hidden.bs.modal', function(e) {
+      console.log(e);
+      $(this).find('form')[0].reset();
+      $(this).removeData();
+      $('.social-line')[0].innerHTML = "";
+      $('i')[1].innerText = 'face';
+      login.attr("placeholder", "Utilizator...")
+      $('i')[2].innerText = 'lock_outline';
+      passw.attr("placeholder", "Parolă...")
+    });
+    e.preventDefault();
+
+    var login = $('#id_login');
+    var passw = $('#id_password');
+
+    login.keyup(function() {
+      $('i')[1].innerText = 'face';
+    });
+    passw.keyup(function() {
+      $('i')[2].innerText = 'lock_outline';
+    });
+
+    if (login.val() === '' && passw.val() === '') {
+
+      $('i')[1].innerText = 'clear';
+      login.attr("placeholder", "Acest câmp este obligatoriu");
+
+      $('i')[2].innerText = 'clear';
+      passw.attr("placeholder", "Acest câmp este obligatoriu");
+
+    } else if (login.val() === '') {
+
+      $('i')[1].innerText = 'clear';
+      login.attr("placeholder", "Acest câmp este obligatoriu");
+
+      $('i')[2].innerText = 'lock_outline';
+      passw.attr("placeholder", "Parolă")
+
+    } else if (passw.val() === '') {
+
+      $('i')[1].innerText = 'face';
+      login.attr("placeholder", "Utilizator");
+
+      $('i')[2].innerText = 'clear';
+      passw.attr("placeholder", "Acest câmp este obligatoriu")
+
+    } else {
+      $.ajax({
+        type: 'POST',
+        url: '{% url "account_login" %}',
+        data:{
+          login:login.val(),
+          password:passw.val(),
+          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+        },
+        success:function(){
+          window.location='{% url "account_login" %}'
+        },
+        error:function(){
+          console.log($('.social-line')[0]);
+          $('.social-line')[0].innerHTML = "<h4>Utilizator sau parolă incorecte</h4>";
+        }
+      });
+    };
+  });
+
+
+
+  </script>
+  {% endblock %}
+</body>
+
 </html>

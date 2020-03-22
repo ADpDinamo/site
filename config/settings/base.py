@@ -43,9 +43,14 @@ LOCALE_PATHS = [ROOT_DIR.path("locale")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgres:///adpd")
+    "default": env.db("DATABASE_URL", default="postgres:///adpd"),
+    'gdpr_log': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(APPS_DIR.path('gdpr-log.sqlite3')),
+    },
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
+DATABASE_ROUTERS = ['gdpr_assist.routers.EventLogRouter']
 
 # URLS
 # ------------------------------------------------------------------------------
@@ -73,6 +78,8 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "rest_framework",
+
+    "gdpr_assist",
 ]
 
 LOCAL_APPS = [
@@ -98,6 +105,7 @@ AUTHENTICATION_BACKENDS = [
 AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
 LOGIN_REDIRECT_URL = "users:redirect"
+# LOGIN_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
