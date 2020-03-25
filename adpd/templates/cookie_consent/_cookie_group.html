@@ -1,0 +1,89 @@
+{% load i18n %}
+{% load cookie_consent_tags %}
+
+<h3 class="title">{{ cookie_group.name }}</h3>
+<p>{{ cookie_group.description }}</p>
+{% if not cookie_group.is_required %}
+   {% if request|cookie_group_accepted:cookie_group.varname %}
+   <table class="table">
+     <tbody>
+       <tr>
+         <td>
+           {% trans "Cookie-uri acceptate" %}
+         </td>
+         <td>
+           <form class="cookie-consent-decline" action="{% url "cookie_consent_decline" cookie_group.varname %}" method="POST">
+             {% csrf_token %}
+             <button type="submit" rel="tooltip" class="btn btn-danger btn-link">
+               <i class="material-icons">highlight_off</i> {% trans "Refuză" %}
+             </button>
+           </form>
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+   {% elif request|cookie_group_declined:cookie_group.varname %}
+
+   <table class="table">
+     <tbody>
+       <tr>
+         <td>
+          {% trans "Cookie-uri refuzate" %}
+         </td>
+         <td>
+           <form class="cookie-consent-accept" action="{% url "cookie_consent_accept" cookie_group.varname %}" method="POST">
+             {% csrf_token %}
+             <button type="submit" rel="tooltip" class="btn btn-success btn-round">
+               <i class="material-icons">check_circle_outline</i> {% trans "Acceptă" %}
+             </button>
+           </form>
+         </td>
+       </tr>
+     </tbody>
+   </table>
+    {% else %}
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>
+            <form class="cookie-consent-accept" action="{% url "cookie_consent_accept" cookie_group.varname %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" rel="tooltip" class="btn btn-success btn-round">
+                  <i class="material-icons">check_circle_outline</i> {% trans "Acceptă" %}
+                </button>
+              </form>
+          </td>
+          <td>
+            <form class="cookie-consent-decline" action="{% url "cookie_consent_decline" cookie_group.varname %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" rel="tooltip" class="btn btn-danger btn-link">
+                <i class="material-icons">highlight_off</i> {% trans "Refuză" %}
+              </button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+   {% endif %}
+{% endif %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nume</th>
+      <th>Serviciu</th>
+      <th>Scop</th>
+      <th class="text-right">Tipul și durata modulului cookie</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cookie in cookie_group.cookie_set.all %}
+    <tr>
+      <td>{{ cookie.name }}</td>
+      <td>{{ cookie.description }}</td>
+      <td>Reține preferințele dvs. legate de modulele cookie (astfel încât întrebarea să nu vi se mai afișeze în viitor)</td>
+      <td class="text-right">Cookie original de sesiune, se șterge la închiderea browserului</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

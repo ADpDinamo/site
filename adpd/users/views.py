@@ -5,7 +5,26 @@ from django.views.generic import DetailView, RedirectView, UpdateView
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
+from django.views.generic import TemplateView
+from cookie_consent.util import get_cookie_value_from_request
+
+
 User = get_user_model()
+
+
+class TestPageView(TemplateView):
+    template_name = "pages/home.html"
+
+    def get(self, request, *args, **kwargs):
+        response = super(TestPageView, self).get(request, *args, **kwargs)
+
+        if get_cookie_value_from_request(request, "optional") is True:
+            val = "optional cookie set from django"
+            response.set_cookie("optional_test_cookie", val)
+        else:
+            response.delete_cookie("optional_test_cookie")
+
+        return response
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):

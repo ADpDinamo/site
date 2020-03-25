@@ -5,9 +5,11 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 
+from adpd.users.views import TestPageView
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    path("", TestPageView.as_view(), name="home"),
+    # path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     # path(
     #     "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     # ),
@@ -16,6 +18,7 @@ urlpatterns = [
     # User management
     path("users/", include("adpd.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+    path('cookies/', include('cookie_consent.urls')),
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

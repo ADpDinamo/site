@@ -1,0 +1,52 @@
+{# extends "cookie_consent/base.html" #}
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="main">
+  <div class="container">
+    <div class="section section-text">
+      <div class="row">
+        <div class="col-md-8 ml-auto mr-auto">
+          <h3 class="title">Ce sunt cookie-urile?</h3>
+          <p>Un „cookie” este un mic fișier text pe care un site îl plasează pe calculatorul sau pe dispozitivul dumneavoastră mobil atunci când îl accesați.</p>
+          <ul>
+            <li>Modulele cookie originale sunt instalate de site-ul pe care îl vizitați. Ele pot fi citite doar de site-ul respectiv. În plus, site-urile utilizează uneori servicii externe, care își plasează propriile cookie-uri – acestea sunt
+              modulele
+              cookie de la terți.
+            </li>
+            <li>Cookie-urile persistente sunt modulele cookie salvate pe calculatorul dumneavoastră care, spre deosebire de cookie-urile de sesiune, nu se șterg automat atunci când închideți browserul.
+            </li>
+          </ul>
+          <p>De fiecare dată când vizitați site-urile Comisiei, veți fi invitat să acceptați sau să refuzați cookie-urile.</p>
+          <p>Scopul este de a permite site-ului să vă rețină preferințele (cum ar fi numele de utilizator, limba etc.) pentru o anumită perioadă de timp.</p>
+          <p>Astfel, nu trebuie să reintroduceți aceste date atunci când navigați pe site în timpul aceleiași vizite.</p>
+          <p>Cookie-urile pot fi utilizate, de asemenea, pentru a crea statistici anonimizate cu privire la experiența de navigare pe site-urile noastre.</p>
+          <h3 class="title">Cum utilizăm cookie-urile?</h3>
+          <p>Site-urile Comisiei Europene utilizează în principal module cookie originale. Acestea sunt instalate și controlate de Comisie, nu de organizații externe.</p>
+          <p>Cu toate acestea, pentru a vizualiza anumite pagini, va trebui să acceptați și cookie-uri de la organizații externe.</p>
+          <p>Folosim 3 tipuri de module cookie originale, pentru:</p>
+          <ul>
+            <li>a stoca preferințele vizitatorilor</li>
+            <li>a asigura buna operare a site-urilor</li>
+            <li>a colecta date analitice (despre comportamentul utilizatorilor)</li>
+          </ul>
+          <h5>Preferințele vizitatorilor</h5>
+          <p>Aceste module cookie sunt plasate de noi și numai noi le putem citi. Ele rețin:</p>
+          <ul>
+            <li>dacă ați acceptat (sau refuzat) politica acestui site în materie de module cookie</li>
+            <li>dacă ați răspuns deja la chestionarul pop-up (cu privire la cât de util v-a fost site-ul), astfel încât să nu vi se mai afișeze în viitor</li>
+          </ul>
+
+          {% for cookie_group in object_list %}
+          {% include "cookie_consent/_cookie_group.html" %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}

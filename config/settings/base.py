@@ -80,6 +80,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
 
     "gdpr_assist",
+    "cookie_consent",
 ]
 
 LOCAL_APPS = [
@@ -192,10 +193,15 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "adpd.utils.context_processors.settings_context",
+                # "django.core.context_processors.request",
             ],
         },
     }
 ]
+
+COOKIE_CONSENT_ENABLED = True
+COOKIE_CONSENT_OPT_OUT = False
+COOKIE_CONSENT_NAME = 'cookie_consent'
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#form-renderer
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
