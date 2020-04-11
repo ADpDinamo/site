@@ -10,18 +10,16 @@ from adpd.users.views import TestPageView
 
 urlpatterns = [
     path("", TestPageView.as_view(), name="home"),
-    # path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    # path(
-    #     "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    # ),
-    # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
     path("users/", include("adpd.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
-    # path('cookies/', include('cookie_consent.urls')),
+
+    # Legal stuff
     path('legale/', include('cookies.urls')),
-    # Your stuff: custom urls includes go here
+
+    # Frontend Admin
+    # path('dashboard', )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

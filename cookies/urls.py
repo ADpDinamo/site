@@ -10,7 +10,12 @@ from cookie_consent.views import (
     CookieGroupDeclineView,
 )
 
-from .views import CookiePageTextListView, TOSListView, StatutListView
+from .views import (CookiePageTextListView,
+                    CookieTextUpdateView,
+                    TOSListView,
+                    TOSUpdateView,
+                    StatutListView,
+                    StatutUpdateView)
 
 urlpatterns = [
     url(r'^cookie/accept/$',
@@ -28,10 +33,14 @@ urlpatterns = [
     url(r'^cookie/$',
         CookiePageTextListView.as_view(),
         name='cookie_consent_cookie_group_list'),
-    url(r'^tos/$',
-        TOSListView.as_view(),
-        name='tos'),
-    url(r'^statut/$',
-        StatutListView.as_view(),
-        name='statut'),
+
+    url(r'^cookie/update/$',
+        CookieTextUpdateView.as_view(),
+        name='cookie_update'),
+
+    url(r'^tos/$', TOSListView.as_view(), name='tos'),
+    url(r'^tos/update/$', TOSUpdateView.as_view(), name='tos_update'),
+
+    url(r'^statut/$', StatutListView.as_view(), name='statut'),
+    url(r'^statut/update/$', StatutUpdateView.as_view(), name='statut_update'),
 ]
