@@ -59,7 +59,7 @@
   <div id="cookieConsent">
     <div id="closeCookieConsent">x</div>
     <p>
-      Pentru a te ajuta să navighezi cât mai bine, site-ul utilizează cookie-uri.</br>Mai multe informaţii despre cum utilizăm cookie-urile şi despre cum îți poţi modifica setările consultă politica noastră privitoare la <a href="{% url "cookie_consent_cookie_group_list" %}"> Cookie-uri</a>
+      Pentru a te ajuta să navighezi cât mai bine, site-ul utilizează cookie-uri.</br>Mai multe informaţii despre cum utilizăm cookie-urile şi despre cum îți poţi modifica setările consultă <a href="{% url "cookie_consent_cookie_group_list" %}">Politica de Cookie-uri</a>
     </p>
     <form id="cookie-consent-form" class="cookie-consent-accept" action="{% url "cookie_consent_accept_all" %}" method="POST">
       {% csrf_token %}
@@ -69,6 +69,37 @@
     </form>
   </div>
   {% endblock %}
+
+  <footer class="footer footer-white" data-background-color="black">
+    <div class="container">
+      <a class="footer-brand" href="/">ADPD</a>
+      <nav class="float-left">
+        <ul>
+          <li>
+            <a href="{% url "cookie_consent_cookie_group_list" %}">
+              Politica de Cookie-uri
+            </a>
+          </li>
+          <li>
+            <a href="{% url "tos" %}">
+              Termeni și condiții
+            </a>
+          </li>
+          <li>
+            <a href="{% url "statut" %}">
+              Statut
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="copyright float-right">
+        &copy;
+        <script>
+          document.write(new Date().getFullYear())
+        </script>, Asociația Dinamoviști pentru Dinamo
+      </div>
+    </div>
+  </footer>
 
   <!--   Core JS Files   -->
   <script src="{% static 'assets/js/core/jquery.min.js' %}" type="text/javascript"></script>

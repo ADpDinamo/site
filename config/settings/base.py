@@ -81,6 +81,8 @@ THIRD_PARTY_APPS = [
 
     "gdpr_assist",
     "cookie_consent",
+    "ckeditor",
+    "cookies"
 ]
 
 LOCAL_APPS = [
