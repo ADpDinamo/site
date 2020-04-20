@@ -1,23 +1,229 @@
-{% extends "account/base.html" %}
+{% extends "base.html" %}
 
-{% load i18n %}
+{% load static i18n %}
 {% load crispy_forms_tags %}
+{% load cookie_consent_tags %}
 
-{% block head_title %}{% trans "Signup" %}{% endblock %}
+{% block intro %}
+<div class="page-header" style="background-image: url({% static 'images/landing.png' %})">
+  <div class="container">
 
-{% block inner %}
-<h1>{% trans "Sign Up" %}</h1>
+    <div class="row" id="testing">
+      <div class="d-none d-sm-none d-md-block col-md-3 align-self-center">
+        <img src="{% static 'images/logoADPD.png' %}" alt="Thumbnail Image" class="rounded-circle img-fluid">
+      </div>
+      <div class="col-md-9">
+        {% if request.user.is_authenticated %}
+        <h1 class="title">{{request.user.username}}</h1>
+        <h1 class="title">Bine ai venit în familia Dinamo!</h1>
+        <h3>Planul tău curent <b>{{ current_membership }}</b> este valabil până la data de __/__/____</h3>
+        {% else %}
+        <h1 class="title">Totul pentru Dinamo!</h1>
+        {% endif %}
+        <h4>De multă vreme noi, suporterii, avem nemulțumiri în legătură cu deciziile luate de către conducerea clubului. Lucrurile nu par să se îmbunătățească odată cu trecerea anilor, ci chiar să devină mai rele. În acest context, un grup de
+          suporteri a venit cu ideea de a da o voce relevantă tuturor celor ce iubesc Dinamo.<br>
+          Alătură-te ADPD și fă parte cu adevărat din istoria lui Dinamo!</h4>
+      </div>
 
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+    </div>
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form|crispy }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %} &raquo;</button>
-</form>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block main_content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 offset-md-1 col-sm-10 offset-sm-1">
+      <div class="card card-nav-tabs">
+
+        <!-- Start card Header -->
+        <div class="card-header card-header-primary">
+          <div class="nav-tabs-navigation">
+            <div class="nav-tabs-wrapper">
+              <ul class="nav nav-tabs" data-tabs="tabs" id="myTab">
+                <li class="nav-item">
+                  <a class="nav-link active show" href="#abonament" data-toggle="tab">
+                    <i class="material-icons">card_membership</i>
+                      <span id="showAbonament"> Abonament </span>
+                    <div class="ripple-container"></div></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#profil" data-toggle="tab">
+                    <i class="material-icons">face</i>
+                    Profil
+                    <div class="ripple-container"></div></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- End card Header -->
+
+        <!-- Start card Body -->
+        <div class="card-body ">
+          <div class="tab-content text-center">
+
+            <!-- Start Abonament Tab -->
+            <div class="tab-pane active show" id="abonament">
+              <div class="row">
+                {% for membership in memberships %}
+                <div class="col-md-4 ml-auto">
+                  <div class="{% cycle 'card card-pricing' 'card card-pricing card-raised bg-primary' %}">
+                    <div class="card-body ">
+                      <h6 class="card-category">{{ membership }}</h6>
+                      <h1 class="card-title">
+                        <small>RON</small>{{ membership.price }}
+                        <small>/an</small>
+                      </h1>
+                      {{ membership.description | safe }}
+                      <button class="btn btn-primary btn-round abonament" value="{{membership.membership_type}}">
+                        Devino Membru {{ membership }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>   <!-- End Abonament Tab -->
+
+            <!-- Start Profil Tab -->
+            <div class="tab-pane" id="profil">
+
+              <!-- Start form -->
+              <form class="form" method="post" action="" id="formProfil">
+                {% csrf_token %}
+                <input type="hidden" name="{{ form.member.name }}" id="memberInput" value="">
+
+                <div class="form-group bmd-form-group">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="material-icons">face</i>
+                      </span>
+                    </div>
+                    <input type="text" class="form-control"
+                    name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+                    {% if form.username.value != None %}value="{{ form.username.value|stringformat:'s' }}"{% endif %}
+                     maxlength="{{ form.username.field.max_length }}"
+                     {% if form.username.field.required %}required{% endif %} placeholder="Utilizator...">
+                  </div>
+                </div>
+                <div class="form-group bmd-form-group">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="material-icons">mail_outline</i>
+                      </span>
+                    </div>
+                    <input type="text" class="form-control"
+                           name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+                           {% if form.email.value != None %}value="{{ form.email.value|stringformat:'s' }}"{% endif %}
+                           maxlength="{{ form.email.field.max_length }}"
+                           {% if form.email.field.required %}required{% endif %}
+                           placeholder="Email...">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+
+                    <div class="form-group bmd-form-group">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="material-icons">lock_open</i>
+                          </span>
+                        </div>
+                        <input type="password" placeholder="Parola..." class="form-control"
+                                name="{{ form.password1.name }}" id="{{ form.password1.id_for_label }}"
+                                {% if form.password1.value != None %}value="{{ form.password1.value|stringformat:'s' }}"{% endif %}
+                                maxlength="{{ form.password1.field.max_length }}"
+                                {% if form.password1.field.required %}required{% endif %}>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group bmd-form-group">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="material-icons">lock_outline</i>
+                          </span>
+                        </div>
+                        <input type="password" placeholder="Verifică parola..." class="form-control"
+                              name="{{ form.password2.name }}" id="{{ form.password2.id_for_label }}"
+                              {% if form.password2.value != None %}value="{{ form.password2.value|stringformat:'s' }}"{% endif %}
+                              maxlength="{{ form.password2.field.max_length }}"
+                              {% if form.password2.field.required %}required{% endif %}>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value="" checked="">
+                    <span class="form-check-sign">
+                      <span class="check"></span>
+                    </span>
+                    Accept <a href="{% url 'tos' %}">Termenii și condițiile</a>.
+                  </label>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary btn-round">Get Started</button>
+                </div>
+                </form>
+
+            </div>  <!-- End Profil Tab -->
+
+        <!-- End card Body -->
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
 
 {% endblock %}
 
+{% block javascript %}
+
+<script type="text/javascript">
+
+  $(".abonament").click(function() {
+    var fired_button = $(this).val();
+    $('#showAbonament').text('Abonament ' + fired_button);
+    $('#memberInput').val(fired_button);
+    $('#myTab a[href="#profil"]').tab('show')
+  });
+
+
+  $(document).on('submit', '#formProfil', function(e) {
+    e.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: '{% url "reg" %}',
+        data: {
+          username: $('#id_username').val(),
+          email: $('#id_email').val(),
+          password1: $('#id_password1').val(),
+          password2: $('#id_password2').val(),
+          member: $('#memberInput').val(),
+          csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(data) {
+          console.log('success:  ' + data)
+          // $('#myTab a[href="#plata"]').tab('show')
+          window.location = '{% url "account_login" %}'
+        },
+        error: function(err) {
+          console.log('eroare ' + err)
+        }
+      });
+  });
+</script>
+{% endblock %}

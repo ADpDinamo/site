@@ -444,3 +444,15 @@
     background-color: #ffffff;
 }
 /*Cookie Consent End*/
+
+.profile-page .page-header {
+  height: 320px;
+  background-position: center center;
+}
+
+.navbar-brand
+{
+  position:absolute;
+  left:calc(50% - 50px);
+  top:8px;
+}

@@ -82,7 +82,9 @@ THIRD_PARTY_APPS = [
     "gdpr_assist",
     "cookie_consent",
     "ckeditor",
-    "cookies"
+    "cookies",
+    "payment",
+    "membership"
 ]
 
 LOCAL_APPS = [
@@ -276,14 +278,16 @@ ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_AUTHENTICATION_METHOD = "username"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "optional"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_ADAPTER = "adpd.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = "adpd.users.adapters.SocialAccountAdapter"
 
+ACCOUNT_FORMS = {'signup': 'users.forms.MyCustomSignupForm'}
 
 # Your stuff...
 # ------------------------------------------------------------------------------

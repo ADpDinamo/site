@@ -7,27 +7,20 @@ from django.core.validators import RegexValidator
 
 
 class UserRole(models.Model):
-    NEWSLETTER = 1
-    BLOG = 2
-    PAYMENT = 3
-    PHONE = 4
-    POSTAL = 5
-    REGULAR = 6
-    ADMINISTRATOR = 0
-
     ROLE_CHOICES = (
-        (NEWSLETTER, 'admin newsletter'),
-        (BLOG, 'admin blog'),
-        (PAYMENT, 'admin payment'),
-        (PHONE, 'admin phone'),
-        (POSTAL, 'admin postal'),
-        (REGULAR, 'regular user'),
-        (ADMINISTRATOR, 'administrator')
+        (0, 'regular user'),
+        (1, 'admin newsletter'),
+        (2, 'admin blog'),
+        (3, 'admin payment'),
+        (4, 'admin phone'),
+        (5, 'admin postal'),
+        (6, 'administrator')
     )
-    id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True)
+
+    rol = models.SmallIntegerField(choices=ROLE_CHOICES)
 
     def __str__(self):
-        return self.get_id_display()
+        return self.get_rol_display()
 
 class User(AbstractUser):
 
@@ -38,6 +31,7 @@ class User(AbstractUser):
     county = CharField(blank=True, max_length=255)
     country = CharField(blank=True, max_length=255)
     zip_code = CharField(blank=True, max_length=255)
+    member = CharField(blank=False, max_length=20, null=True)
 
 
     # First Name and Last Name do not cover name patterns
@@ -58,7 +52,7 @@ class User(AbstractUser):
     date_of_birth = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
     creation_date = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
 
-    roles = models.ManyToManyField(UserRole)
+    roles = models.ForeignKey(UserRole, on_delete=models.CASCADE, default=0)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})

@@ -5,21 +5,26 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 
-from adpd.users.views import TestPageView
+
+from adpd.users.views import HomePageView, CustomSignupView
 # from adpd.cookies.urls
 
 urlpatterns = [
-    path("", TestPageView.as_view(), name="home"),
+    path("", HomePageView.as_view(), name="home"),
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
-    path("users/", include("adpd.users.urls", namespace="users")),
-    path("accounts/", include("allauth.urls")),
+    path("utilizator/", include("adpd.users.urls", namespace="users")),
+    path("cont/", include("allauth.urls")),
+    path("inregistrare/", CustomSignupView.as_view(), name='reg'),
 
     # Legal stuff
     path('legale/', include('cookies.urls')),
 
     # Frontend Admin
     # path('dashboard', )
+
+    # Plati
+    path('plata/', include('payment.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

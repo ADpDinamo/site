@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block head_js %}
+{% endblock %}
+
+{% block main_content %}
+<div class="main">
+  <div class="container">
+    <div class="section section-text">
+      <div class="row">
+        <div class="col-md-8 ml-auto mr-auto">
+
+          <h3>Tipul de abonament ales: {{selected_membership}}</h3>
+          <h5>Pret anual: {{selected_membership.price}} RON</h5>
+          <h5>Modalitatea de plata: {{payment_token}}</h5>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
