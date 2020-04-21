@@ -4,45 +4,22 @@
 {% load crispy_forms_tags %}
 {% load cookie_consent_tags %}
 
-{% block intro %}
-<div class="page-header" style="background-image: url({% static 'images/landing.png' %})">
-  <div class="container">
-
-    <div class="row" id="testing">
-      <div class="d-none d-sm-none d-md-block col-md-3 align-self-center">
-        <img src="{% static 'images/logoADPD.png' %}" alt="Thumbnail Image" class="rounded-circle img-fluid">
-      </div>
-      <div class="col-md-9">
-        {% if request.user.is_authenticated %}
-        <h1 class="title">{{request.user.username}}</h1>
-        <h1 class="title">Bine ai venit în familia Dinamo!</h1>
-        <h3>Planul tău curent <b>{{ current_membership }}</b> este valabil până la data de __/__/____</h3>
-        {% else %}
-        <h1 class="title">Totul pentru Dinamo!</h1>
-        {% endif %}
-        <h4>De multă vreme noi, suporterii, avem nemulțumiri în legătură cu deciziile luate de către conducerea clubului. Lucrurile nu par să se îmbunătățească odată cu trecerea anilor, ci chiar să devină mai rele. În acest context, un grup de
-          suporteri a venit cu ideea de a da o voce relevantă tuturor celor ce iubesc Dinamo.<br>
-          Alătură-te ADPD și fă parte cu adevărat din istoria lui Dinamo!</h4>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-{% endblock %}
+{% block body_class %}
+<body class="signup-page sidebar-collapse" id="mainly">
+{% endblock body_class %}
 
 
 {% block main_content %}
+<div class="page-header" filter-color="red" style="background-image: url('{% static 'images/landing.png' %}'); background-size: cover; background-position: top center;">
 <div class="container">
   <div class="row">
-    <div class="col-md-10 offset-md-1 col-sm-10 offset-sm-1">
+    <div class="col-11 ml-auto mr-auto">
       <div class="card card-nav-tabs">
-
         <!-- Start card Header -->
         <div class="card-header card-header-primary">
           <div class="nav-tabs-navigation">
             <div class="nav-tabs-wrapper">
-              <ul class="nav nav-tabs" data-tabs="tabs" id="myTab">
+              <ul class="nav nav-tabs nav-justified" data-tabs="tabs" id="myTab">
                 <li class="nav-item">
                   <a class="nav-link active show" href="#abonament" data-toggle="tab">
                     <i class="material-icons">card_membership</i>
@@ -68,6 +45,12 @@
             <!-- Start Abonament Tab -->
             <div class="tab-pane active show" id="abonament">
               <div class="row">
+                <div class="col-12">
+
+                  <h3>Selectează tipul de Abonament</h3>
+                </div>
+                </div>
+                <div class="row">
                 {% for membership in memberships %}
                 <div class="col-md-4 ml-auto">
                   <div class="{% cycle 'card card-pricing' 'card card-pricing card-raised bg-primary' %}">
@@ -90,7 +73,7 @@
 
             <!-- Start Profil Tab -->
             <div class="tab-pane" id="profil">
-
+              <h3>Completează datele de înregistrare</h3>
               <!-- Start form -->
               <form class="form" method="post" action="" id="formProfil">
                 {% csrf_token %}
@@ -164,7 +147,9 @@
 
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" value="" checked="">
+                    <input class="form-check-input" type="checkbox" value=""
+                          name="{{ form.tos.name }}" id="{{ form.tos.id_for_label }}"
+                          {% if form.tos.field.required %}required{% endif %}>
                     <span class="form-check-sign">
                       <span class="check"></span>
                     </span>
@@ -186,7 +171,7 @@
 </div>
 </div>
 </div>
-
+</div>
 
 {% endblock %}
 
@@ -201,7 +186,6 @@
     $('#myTab a[href="#profil"]').tab('show')
   });
 
-
   $(document).on('submit', '#formProfil', function(e) {
     e.preventDefault();
       $.ajax({
@@ -213,6 +197,7 @@
           password1: $('#id_password1').val(),
           password2: $('#id_password2').val(),
           member: $('#memberInput').val(),
+          tos: $('#id_tos').is(':checked'),
           csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
         },
         success: function(data) {

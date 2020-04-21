@@ -448,11 +448,12 @@
 .profile-page .page-header {
   height: 320px;
   background-position: center center;
+  /* background-size: cover; */
 }
 
-.navbar-brand
+/* .navbar-brand
 {
-  position:absolute;
+  position:absolute !important;
   left:calc(50% - 50px);
   top:8px;
-}
+} */

@@ -22,39 +22,6 @@
   <link href="{% static 'assets/css/material-kit.css' %}" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="{% static 'css/adpd.css' %}" rel="stylesheet" />
-
-
-  <!-- Matomo -->
-  <script type="text/javascript">
-    var _paq = window._paq || [];
-    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-    _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-    _paq.push(["setCookieDomain", "*.192.168.0.4"]);
-    _paq.push(["setDomains", ["*.192.168.0.4", "*.127.0.0.1", "*.localhost"]]);
-    _paq.push(["enableCrossDomainLinking"]);
-    _paq.push(["setDoNotTrack", true]);
-    _paq.push(["disableCookies"]);
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-      var u = "//192.168.0.4:81/matomo/";
-      _paq.push(['setTrackerUrl', u + 'matomo.php']);
-      _paq.push(['setSiteId', '3']);
-      var d = document,
-        g = d.createElement('script'),
-        s = d.getElementsByTagName('script')[0];
-      g.type = 'text/javascript';
-      g.async = true;
-      g.defer = true;
-      g.src = u + 'matomo.js';
-      s.parentNode.insertBefore(g, s);
-    })();
-  </script>
-  <noscript>
-    <p><img src="//192.168.0.4:81/matomo/matomo.php?idsite=3&amp;rec=1" style="border:0;" alt="" /></p>
-  </noscript>
-  <!-- End Matomo Code -->
-
   {% block head_js %}
   {% endblock %}
 </head>
@@ -69,16 +36,17 @@
     <div class="container">
       <div class="navbar-translate">
         <a class="navbar-brand" href="/">
-          <div class="d-block d-sm-block d-md-none d-lg-none">
-            <div class="logo-big">
+          <img src="{% static 'images/logoADPD.png' %}" class="img-fluid" style="width:100px; height:100px;">
+          <!-- <div class="d-block d-sm-block d-md-none d-lg-none"> -->
+          <!-- <div class="d-block d-sm-block"> -->
+            <!-- <div class="logo-big"> -->
               <!-- <img src="{% static 'images/logos/adpd_alb.png' %}" class="img-fluid"> -->
-              <img src="{% static 'images/logoADPD.png' %}" class="img-fluid">
-            </div>
-          </div>
-          <div class="logo-small">
+            <!-- </div> -->
+          <!-- </div> -->
+          <!-- <div class="logo-small"> -->
             <!-- <img src="{% static 'images/logos/adpd_alb_fundal_rosu.png' %}" class="img-fluid"> -->
-            <img src="{% static 'images/logoADPD.png' %}" class="img-fluid">
-          </div>
+            <!-- <img src="{% static 'images/logoADPD.png' %}" class="img-fluid"> -->
+          <!-- </div> -->
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="sr-only">Toggle navigation</span>

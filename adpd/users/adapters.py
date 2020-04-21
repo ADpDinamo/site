@@ -19,6 +19,7 @@ class AccountAdapter(DefaultAccountAdapter):
         # (last argument)
         user = super().save_user(request, user, form, commit=False)
         user.member = form.cleaned_data.get('member')
+        user.tos = form.cleaned_data.get('tos')
         user.save()
 
 

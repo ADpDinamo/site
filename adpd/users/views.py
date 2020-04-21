@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.shortcuts import render
-
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 
 from django.views.generic import DetailView, RedirectView, UpdateView, TemplateView
@@ -101,37 +101,44 @@ class HomePageView(TemplateView):
     #     return HttpResponseRedirect(reverse('recieve'))
 
 
-
+@login_required
 def PaymentView(request):
+
     payment_method_nonce = request.POST.get('payment_method_nonce')
 
-    # Tip abonament selectat
-    selected_membership = get_selected_membership(request)
-    selected_membership_qs = Membership.objects.filter(
-                                        membership_type=selected_membership)
-    if selected_membership_qs.exists():
-        memb =  selected_membership_qs.first()
+    if payment_method_nonce:
+        print(payment_method_nonce)
 
-    # braintree customer ID
-    user_membership = get_user_membership(request)
+        # Tip abonament selectat
+        selected_membership = get_selected_membership(request)
+        selected_membership_qs = Membership.objects.filter(
+                                            membership_type=selected_membership)
+        if selected_membership_qs.exists():
+            memb =  selected_membership_qs.first()
 
-    payment_token = gateway.payment_method.create({
-        "customer_id": user_membership.gateway_customer_id,
-        "payment_method_nonce": payment_method_nonce
-    })
+        # braintree customer ID
+        user_membership = get_user_membership(request)
 
-    result = gateway.subscription.create({
-        "payment_method_token": payment_token.payment_method.token,
-        "plan_id": memb.gateway_plan
-    })
+        payment_token = gateway.payment_method.create({
+            "customer_id": user_membership.gateway_customer_id,
+            "payment_method_nonce": payment_method_nonce
+        })
 
-    if result.subscription.id and user_membership:
-        sub = Subcription.objects.get_or_create(gateway_subscription_id=result.subscription.id, user_memebership=user_membership)
+        print(payment_token)
+        result = gateway.subscription.create({
+            "payment_method_token": payment_token.payment_method.token,
+            "plan_id": memb.gateway_plan
+        })
 
-    context = {'selected_membership': selected_membership,
-                'subscription': sub}
+        if result.subscription.id and user_membership:
+            sub = Subcription.objects.get_or_create(gateway_subscription_id=result.subscription.id, user_memebership=user_membership)
 
-    return render(request, "payment/recieve.html", context)
+        context = {'selected_membership': selected_membership,
+                    'subscription': sub}
+
+        return render(request, "payment/recieve.html", context)
+
+    return reverse('users:detail', kwargs={"username": request.user.username})
 
 
 
@@ -139,6 +146,8 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
+    # slug_field = "username"
+    # slug_url_kwarg = "username"
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)

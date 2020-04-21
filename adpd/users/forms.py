@@ -15,6 +15,7 @@ User = get_user_model()
 
 class MyCustomSignupForm(SignupForm):
     member = f.CharField(required=True)
+    tos = f.BooleanField(required=True)
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
     #     self.helper = FormHelper()

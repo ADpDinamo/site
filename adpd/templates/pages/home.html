@@ -19,7 +19,7 @@
         <h1 class="title">Bine ai venit în familia Dinamo!</h1>
         <h3>Planul tău curent <b>{{ current_membership }}</b>
           {% if subscription.status != 'Active' %}
-          <b>nu este activ.</b> Îți poți plăti cotizația <a href="{% url 'recieve' %}"><b>aici</b></a>.</h3>
+          <b>nu este activ.</b> Îți poți plăti cotizația <a href="{% url 'users:detail' request.user.username %}"><b>aici</b></a>.</h3>
           {% else %}
           este valabil până la data de {{subscription.billing_period_end_date}}</h3>
           {% endif %}

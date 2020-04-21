@@ -42,24 +42,24 @@ LOCALE_PATHS = [ROOT_DIR.path("locale")]
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-# DATABASES = {
-#     "default": env.db("DATABASE_URL", default="postgres:///adpd"),
-#     'gdpr_log': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': str(APPS_DIR.path('gdpr-log.sqlite3')),
-#     },
-# }
-
 DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'djangodb',
-    'USER': 'dbadmin',
-    'PASSWORD': '-eMXdQ?e=EThdxe',
-    'HOST': 'db4django.cluster-caov8qlkjdmh.eu-central-1.rds.amazonaws.com',
-    'PORT': '5432'
-  }
+    "default": env.db("DATABASE_URL", default="postgres:///adpd"),
+    'gdpr_log': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(APPS_DIR.path('gdpr-log.sqlite3')),
+    },
 }
+
+# DATABASES = {
+#   'default': {
+#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     'NAME': '',
+#     'USER': '',
+#     'PASSWORD': '',
+#     'HOST': '',
+#     'PORT': ''
+#   }
+# }
 
 
 

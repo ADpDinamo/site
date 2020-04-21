@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import CharField
+from django.db.models import CharField, BooleanField
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import RegexValidator
@@ -32,6 +32,7 @@ class User(AbstractUser):
     country = CharField(blank=True, max_length=255)
     zip_code = CharField(blank=True, max_length=255)
     member = CharField(blank=False, max_length=20, null=True)
+    tos = BooleanField()
 
 
     # First Name and Last Name do not cover name patterns
