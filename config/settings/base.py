@@ -10,6 +10,7 @@ ROOT_DIR = (
 APPS_DIR = ROOT_DIR.path("adpd")
 
 env = environ.Env()
+# print('engine', env('ENGINE'))
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=True)
 if READ_DOT_ENV_FILE:
@@ -24,7 +25,7 @@ DEBUG = env.bool("DJANGO_DEBUG", False)
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
 # In Windows, this must be set to your system time zone.
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Bucharest"
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = "en-us"
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
@@ -43,29 +44,23 @@ LOCALE_PATHS = [ROOT_DIR.path("locale")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgres:///adpd"),
-    'gdpr_log': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(APPS_DIR.path('gdpr-log.sqlite3')),
-    },
+    "default": {
+        'ENGINE': env('ADPD_ENGINE'),
+        'NAME': env('ADPD_NAME'),
+        'USER': env('ADPD_USER'),
+        'PASSWORD': env('ADPD_PASSWORD'),
+        'HOST': env('ADPD_HOST'),
+        'PORT': env('ADPD_PORT'),
+    }
+    # env.db("DATABASE_URL", default="postgres:///adpd"),
+    # 'gdpr_log': {ROOT_DIR
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': str(APPS_DIR.path('gdpr-log.sqlite3')),
+    # },
 }
 
-# DATABASES = {
-#   'default': {
-#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#     'NAME': '',
-#     'USER': '',
-#     'PASSWORD': '',
-#     'HOST': '',
-#     'PORT': ''
-#   }
-# }
-
-
-
-
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
-DATABASE_ROUTERS = ['gdpr_assist.routers.EventLogRouter']
+# DATABASE_ROUTERS = ['gdpr_assist.routers.EventLogRouter']
 
 # URLS
 # ------------------------------------------------------------------------------
@@ -94,7 +89,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "rest_framework",
 
-    "gdpr_assist",
+    # "gdpr_assist",
     "cookie_consent",
     "ckeditor",
     "cookies",
