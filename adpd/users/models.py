@@ -53,7 +53,7 @@ class User(AbstractUser):
     date_of_birth = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
     creation_date = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
 
-    roles = models.ForeignKey(UserRole, on_delete=models.CASCADE, default=0)
+    # roles = models.ForeignKey(UserRole, on_delete=models.CASCADE, default=0)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
