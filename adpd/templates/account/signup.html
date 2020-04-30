@@ -75,7 +75,7 @@
             <div class="tab-pane" id="profil">
               <h3>Completează datele de înregistrare</h3>
               <!-- Start form -->
-              <form class="form" method="post" action="" id="formProfil">
+              <form class="form" method="post" action='{% url "reg" %}' id="formProfil">
                 {% csrf_token %}
                 <input type="hidden" name="{{ form.member.name }}" id="memberInput" value="">
 
