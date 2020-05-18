@@ -73,13 +73,14 @@
 
             <!-- Start Profil Tab -->
             <div class="tab-pane" id="profil">
-              <h3>Completează datele de înregistrare</h3>
+              <h3 id="display-errors">Completează datele de înregistrare</h3>
               <!-- Start form -->
-              <form class="form" method="post" action='{% url "reg" %}' id="formProfil">
+              <form method="post" action='{% url "reg" %}' id="formProfil">
                 {% csrf_token %}
                 <input type="hidden" name="{{ form.member.name }}" id="memberInput" value="">
 
-                <div class="form-group bmd-form-group">
+                <div class="form-group bmd-form-group" id="div_username">
+                  <label for="{{ form.username.name }}" id="username-errors" class="bmd-label-floating" style="left: 55px;top: 10px;"></label>
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">
@@ -91,9 +92,12 @@
                     {% if form.username.value != None %}value="{{ form.username.value|stringformat:'s' }}"{% endif %}
                      maxlength="{{ form.username.field.max_length }}"
                      {% if form.username.field.required %}required{% endif %} placeholder="Utilizator...">
-                  </div>
+                     </div>
+                     <span class="bmd-help" style="left: 55px;">Introdu utilizatorul</span>
                 </div>
-                <div class="form-group bmd-form-group">
+
+                <div class="form-group bmd-form-group" id="div_email">
+                  <label for="{{ form.email.name }}" id="email-errors" class="bmd-label-floating" style="left: 55px;top: 10px;"></label>
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">
@@ -107,12 +111,14 @@
                            {% if form.email.field.required %}required{% endif %}
                            placeholder="Email...">
                   </div>
+                  <span class="bmd-help" style="left: 55px;">Introdu adresa de email.</span>
                 </div>
 
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-6-md">
 
-                    <div class="form-group bmd-form-group">
+                    <div class="form-group bmd-form-group" id="div_password1">
+                      <label for="{{ form.password1.name }}" id="password1-errors" class="bmd-label-floating" style="left: 55px;top: 10px;"></label>
                       <div class="input-group">
                         <div class="input-group-prepend">
                           <span class="input-group-text">
@@ -125,10 +131,12 @@
                                 maxlength="{{ form.password1.field.max_length }}"
                                 {% if form.password1.field.required %}required{% endif %}>
                       </div>
+                      <span class="bmd-help" style="left: 55px;">Introdu parola.</span>
                     </div>
                   </div>
-                  <div class="col-6">
-                    <div class="form-group bmd-form-group">
+                  <div class="col-6-md">
+                    <div class="form-group bmd-form-group" id="div_password2">
+                      <label for="{{ form.password2.name }}" id="password2-errors" class="bmd-label-floating" style="left: 55px;top: 10px;"></label>
                       <div class="input-group">
                         <div class="input-group-prepend">
                           <span class="input-group-text">
@@ -141,6 +149,7 @@
                               maxlength="{{ form.password2.field.max_length }}"
                               {% if form.password2.field.required %}required{% endif %}>
                       </div>
+                      <span class="bmd-help" style="left: 55px;">Verifică parola.</span>
                     </div>
                   </div>
                 </div>
@@ -158,7 +167,7 @@
                 </div>
 
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary btn-round">Get Started</button>
+                  <button type="submit" class="btn btn-primary btn-round">Mergi la ultimul pas</button>
                 </div>
                 </form>
 
@@ -186,8 +195,81 @@
     $('#myTab a[href="#profil"]').tab('show')
   });
 
+  $('#id_email').on('input', function() {
+    var input=$(this);
+    var re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+    if(re.test(input.val())) {
+      $('#email-errors').html("").html("");
+    } else {
+      $('#email-errors').html("").html("Adresa de email este invalida");
+      $('#div_email').addClass("has-danger");
+    }
+  }).blur(function() {
+    var input=$(this);
+
+    if (input.val().trim()===""){
+      $('#email-errors').html("").html("Acest câmp este obligatoriu!");
+      $('#div_email').addClass("has-danger");
+    }
+  });
+
+  $('#id_username').on('input', function() {
+    var input=$(this);
+
+    if(/\s/.test(input.val())) {
+      $('#username-errors').html("").html("Acest câmp nu poate conține spații");
+      $('#div_username').addClass("has-danger");
+    } else {
+      $('#username-errors').html("");
+    }
+  }).blur(function() {
+    var input=$(this);
+
+    if (input.val().trim()===""){
+      $('#username-errors').html("").html("Acest câmp este obligatoriu!");
+      $('#div_username').addClass("has-danger");
+      }
+  });
+
+  $('#id_password1').blur(function() {
+    var input=$(this);
+
+    if (input.val().trim()===""){
+      $('#password1-errors').html("").html("Acest câmp este obligatoriu!");
+      $('#div_password1').addClass("has-danger");
+    } else {
+      $('#password1-errors').html("");
+    }
+  });
+
+  $('#id_password2').blur(function() {
+    var input=$(this);
+
+    var pass1 = $('#id_password1')
+
+    if (input.val().trim()===""){
+      $('#password2-errors').html("").html("Acest câmp este obligatoriu!");
+      $('#div_password2').addClass("has-danger");
+    } else {
+      $('#password2-errors').html("");
+    }
+
+    if (input.val() !== pass1.val()) {
+      $('#password1-errors').html("").html("Parolele nu coincid!");
+      $('#div_password1').addClass("has-danger");
+      $('#password2-errors').html("").html("Parolele nu coincid!");
+      $('#div_password2').addClass("has-danger");
+    } else {
+      $('#password1-errors').html("");
+      $('#password2-errors').html("");
+    }
+
+  });
+
   $(document).on('submit', '#formProfil', function(e) {
     e.preventDefault();
+
       $.ajax({
         type: 'POST',
         url: '{% url "reg" %}',
@@ -206,9 +288,16 @@
           window.location = '{% url "account_login" %}'
         },
         error: function(err) {
-          console.log('eroare ' + err)
+          if ($('#memberInput').val().trim() === "") {
+            $('#display-errors').html('').html('Nu ai selectat tipul de abonament')
+
+          } else {
+
+            $('#display-errors').html('').html('Verifică erorile')
+          }
         }
       });
+      // }
   });
 </script>
 {% endblock %}

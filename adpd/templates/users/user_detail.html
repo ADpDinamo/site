@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static crispy_forms_tags %}
 
 {% block title %}Socio: {{ object.username }}{% endblock %}
 
@@ -13,7 +13,7 @@
 <div class="container">
   <div class="row">
     <div class="col-10 ml-auto mr-auto">
-      <h3 class="title text-center" style="margin-top: 0px;">Bine ai venit</h3>
+      <h3 class="title text-center" style="margin-top: 0px;">Bine ai venit în familia Dinamo</h3>
     </div>
   </div>
 </div>
@@ -32,15 +32,14 @@
               {% if current_membership != 'None' %}
               <h5 class="title">Membru Socios<br>{{current_membership}}</h5>
               <h5 class="title">Valabil până la {{subscription.billing_period_end_date}}</h5>
-              {{subscription.status}}
               {% endif %}
               </div>
           </div>
         </div>
       </div>
 
+      <div class="row">
       {% if subscription.status != 'Active' %}
-
       <div class="row">
         <div class="col-md-10 ml-auto mr-auto">
           <form id="payment-form" method="post" action="{% url 'recieve' %}">
@@ -58,19 +57,172 @@
           </form>
         </div>
       </div>
+      {% else %}
+      <div class="row">
+        <div class="col-md-6 ml-auto mr-auto align-self-center">
+          <div class="id-card-socio-container">
+              <img class="img rounded img-fluid card-socio" src="{% static 'images/card_socios/card_socio_adpd3.png' %}" alt="card_socio_{{object.username}}">
+              <div class="card-text-block-name">
+                <svg viewBox="0 0 450 20">
+                  <text x="0" y="19" id="numeSocio">{% if request.user.name %}{{request.user.name}}{% else %}Numele Tău{% endif %}</text>
+                </svg>
+              </div>
+              <div class="card-text-block-socio-nr">
+                <svg viewBox="0 0 150 20">
+                  <text x="0" y="19">Socio Nr. A0112</text>
+                </svg>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 ml-auto mr-auto">
+              <div class="card-header card-header-rose text-center">
+                <h4 class="card-title">Completează-ți profilul</h4>
+              </div>
+              <form id="contact-form2" method="post" action="{% url 'users:detail' request.user.username %}">
+                {% csrf_token %}
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group label-floating is-empty has-rose bmd-form-group">
+                      <label class="bmd-label-floating">Numele tău complet</label>
+                      <input type="text" name="{{form.name.name}}" class="form-control" id="numeSocioInput"
+                              value="{% if request.user.name %}{{request.user.name}}{% endif %}">
+                      {% if form.name.errors %}
+                          {% for error in form.name.errors %}
+                          <p class="text-danger">{{error}}</p>
+                          {% endfor %}
+                      {% endif %}
+
+                      <span class="material-input"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group label-floating is-empty has-rose bmd-form-group">
+                      <label class="bmd-label-floating">Număr de telefon</label>
+                      <input type="tel" name="{{form.mobile_number.name}}" class="form-control"
+                        value="{% if request.user.mobile_number %}{{request.user.mobile_number}}{% endif %}">
+                        {% if form.mobile_number.errors %}
+                            {% for error in form.mobile_number.errors %}
+                            <p class="text-danger">{{error}}</p>
+                            {% endfor %}
+                        {% endif %}
+                      <span class="material-input"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group label-floating is-empty has-rose bmd-form-group">
+                      <label class="bmd-label-floating">Data nașterii</label>
+                      <input type="text" name="{{form.date_of_birth.name}}" class="form-control datepicker"
+                             value="{% if request.user.date_of_birth %}{{request.user.date_of_birth|date:"d-m-Y"}}{% endif %}">
+                       {% if form.date_of_birth.errors %}
+                           {% for error in form.date_of_birth.errors %}
+                           <p class="text-danger">{{error}}</p>
+                           {% endfor %}
+                       {% endif %}
+
+                      <span class="material-input"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group label-floating is-empty has-rose bmd-form-group">
+                      <label class="bmd-label-floating">Adresa de corespondență</label>
+                      <input type="text" name="{{form.street1.name}}" class="form-control"
+                             value="{% if request.user.street1 %}{{request.user.street1}}{% endif %}">
+                     {% if form.street1.errors %}
+                         {% for error in form.street1.errors %}
+                         <p class="text-danger">{{error}}</p>
+                         {% endfor %}
+                     {% endif %}
+
+                      <span class="material-input"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group label-floating is-empty has-rose bmd-form-group">
+                      <label class="bmd-label-floating">Codul poștal</label>
+                      <input type="text" name="{{form.zip_code.name}}" class="form-control"
+                             value="{% if request.user.zip_code %}{{request.user.zip_code}}{% endif %}">
+                     {% if form.zip_code.errors %}
+                         {% for error in form.zip_code.errors %}
+                         <p class="text-danger">{{error}}</p>
+                         {% endfor %}
+                     {% endif %}
+
+                      <span class="material-input"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group label-floating is-empty has-rose bmd-form-group">
+                      <label class="bmd-label-floating">Orașul</label>
+                      <input type="text" name="{{form.city.name}}" class="form-control"
+                             value="{% if request.user.city %}{{request.user.city}}{% endif %}">
+                     {% if form.city.errors %}
+                         {% for error in form.city.errors %}
+                         <p class="text-danger">{{error}}</p>
+                         {% endfor %}
+                     {% endif %}
+
+                      <span class="material-input"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group label-floating is-empty has-rose bmd-form-group">
+                      <label class="bmd-label-floating">Țara</label>
+                      <input type="text" name="{{form.country.name}}" class="form-control"
+                             value="{% if request.user.country %}{{request.user.country}}{% endif %}">
+                     {% if form.country.errors %}
+                         {% for error in form.country.errors %}
+                         <p class="text-danger">{{error}}</p>
+                         {% endfor %}
+                     {% endif %}
+
+                      <span class="material-input"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-round pull-right">Salvează profilul</button>
+            </form>
+        </div>
+      </div>
       {% endif %}
     </div>
   </div>
 </div>
+
 
 {% endblock main_content %}
 
 
 
 
-{% if subscription.status != 'Active' %}
 {% block javascript %}
 
+ <script type="text/javascript">
+
+  $("#numeSocioInput").keyup(function(){
+      $("#numeSocio").text(this.value);
+  });
+
+  $('.datepicker').datetimepicker({
+    format: 'DD-MM-YYYY',
+    icons: {
+      time: "fa fa-clock-o",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+ </script>
+
+
+{% if subscription.status != 'Active' %}
 <script src="https://js.braintreegateway.com/web/dropin/1.22.1/js/dropin.min.js"></script>
 <script>
   var form = document.querySelector('#payment-form');
@@ -80,7 +232,10 @@
     authorization: client_token,
     container: '#bt-dropin',
     paypal: {
-      flow: 'vault'
+      // flow: 'vault'
+      flow: 'checkout',
+      amount: '10.00',
+      currency: 'USD'
     }
   }, function (createErr, instance) {
     form.addEventListener('submit', function (event) {
@@ -100,5 +255,5 @@
     });
   });
 </script>
-{% endblock %}
 {% endif %}
+{% endblock %}

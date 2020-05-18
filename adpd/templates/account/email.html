@@ -4,13 +4,13 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Account" %}{% endblock %}
+{% block head_title %}{% trans "Cont" %}{% endblock %}
 
 {% block inner %}
-<h1>{% trans "E-mail Addresses" %}</h1>
+<h1>{% trans "Adrese de email" %}</h1>
 
 {% if user.emailaddress_set.all %}
-<p>{% trans 'The following e-mail addresses are associated with your account:' %}</p>
+<p>{% trans 'Aceste adrese de email sunt asociate contului tău:' %}</p>
 
 <form action="{% url 'account_email' %}" class="email_list" method="post">
 {% csrf_token %}
@@ -24,19 +24,19 @@
 
     {{ emailaddress.email }}
     {% if emailaddress.verified %}
-    <span class="verified">{% trans "Verified" %}</span>
+    <span class="verified">{% trans "Verificată" %}</span>
     {% else %}
-    <span class="unverified">{% trans "Unverified" %}</span>
+    <span class="unverified">{% trans "Neverificată" %}</span>
     {% endif %}
-    {% if emailaddress.primary %}<span class="primary">{% trans "Primary" %}</span>{% endif %}
+    {% if emailaddress.primary %}<span class="primary">{% trans "Adresă principală" %}</span>{% endif %}
   </label>
 </div>
   {% endfor %}
 
 <div class="form-group">
-      <button class="secondaryAction btn btn-primary" type="submit" name="action_primary" >{% trans 'Make Primary' %}</button>
-      <button class="secondaryAction btn btn-primary" type="submit" name="action_send" >{% trans 'Re-send Verification' %}</button>
-      <button class="primaryAction btn btn-primary" type="submit" name="action_remove" >{% trans 'Remove' %}</button>
+      <button class="secondaryAction btn btn-primary" type="submit" name="action_primary" >{% trans 'Setează ca adresă principală' %}</button>
+      <button class="secondaryAction btn btn-primary" type="submit" name="action_send" >{% trans 'Retrimite cod de verificare' %}</button>
+      <button class="primaryAction btn btn-primary" type="submit" name="action_remove" >{% trans 'Șterge' %}</button>
 </div>
 
 </fieldset>
@@ -77,4 +77,3 @@
 $('.form-group').removeClass('row');
 </script>
 {% endblock %}
-

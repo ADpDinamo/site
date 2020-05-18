@@ -1,87 +1,138 @@
-{% extends "account/base.html" %}
+{% extends "base.html" %}
 
+{% load static %}
 {% load i18n %}
 {% load account socialaccount %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block head_title %}{% trans "Autentificare" %}{% endblock %}
 
-{% block inner %}
 
-{% if request.user.is_authenticated %}
-<h4>
-Salut, muie!
-</h4>
-{%endif%}
+{% block body_class %}
 
-<form id="logare" class="login" method="POST" action="{% url 'account_login' %}">
-  {% csrf_token %}
-  <div class="card-body">
-    <div class="form-group bmd-form-group">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <div class="input-group-text"><i class="material-icons">face</i></div>
+<body class="signup-page sidebar-collapse" id="mainly">
+  {% endblock body_class %}
+
+
+  {% block main_content %}
+
+  <div class="page-header" filter-color="red" style="background-image: url('{% static 'images/landing.png' %}'); background-size: cover; background-position: top center;">
+    <div class="container">
+      <div class="row">
+        <div class="col-10 ml-auto mr-auto">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Autentificare</h4>
+              <div class="social-line" id="name_error">
+              </div>
+
+              <form id="logare" class="login" method="POST" action="{% url 'account_login' %}">
+                {% csrf_token %}
+                <div class="card-body">
+                  <div class="form-group bmd-form-group">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="material-icons">face</i></div>
+                      </div>
+                      <p>
+                        {{form.login.errors}}</br>
+                        {% for error in form.login.errors %}
+                        <p id="error_{{ forloop.counter }}_{{ field.auto_id }}" class="invalid-feedback"><strong>{{ error }}</strong></p>
+                        {% endfor %}
+                      </p>
+                      <input type="text" name="{{ form.login.name|slugify }}" class="form-control" id="{{ form.login.id_for_label}}" {{ form.login.flat_attrs|safe }} />
+                    </div>
+                  </div>
+                  <div class="form-group bmd-form-group">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="material-icons">lock_outline</i></div>
+                      </div>
+                      <input type="password" name="{{ form.password.name }}" class="form-control" id="{{ form.password.id_for_label}}" {{ form.password.flat_attrs|safe }} />
+                    </div>
+                  </div>
+                  <p>{{form.errors}}</p>
+                  {% if redirect_field_value %}
+                  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                  {% endif %}
+                  <button class="btn btn-primary btn-round" type="submit">{% trans "Confirmă" %}</button>
+                </div>
+              </form>
+            </div>
           </div>
-          <p>Dudu
-            {{form.login.errors}}</br>
-            {% for error in form.login.errors %}
-                <p id="error_{{ forloop.counter }}_{{ field.auto_id }}" class="invalid-feedback"><strong>{{ error }}</strong></p>
-            {% endfor %}
-          </p>
-          <input type="text"
-              name="{% if form.login.name|wordcount > 1 %}{{ form.login.name|slugify }}{% else %}{{ form.login.name }}{% endif %}"
-              {% if form.login.input_type != "hidden" %}
-                  class="form-control"
-                  id="{{ form.login.id_for_label}}"
-              {% endif %}
-              {{ form.login.flat_attrs|safe }}
-              />
+        </div>
       </div>
     </div>
-    <div class="form-group bmd-form-group">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <div class="input-group-text"><i class="material-icons">lock_outline</i></div>
-          </div>
-          <input type="password"
-              name="{% if form.password.name|wordcount > 1 %}{{ form.password.name|slugify }}{% else %}{{ form.password.name }}{% endif %}"
-              {% if form.password.input_type != "hidden" %}
-                  class="form-control"
-                  id="{{ form.password.id_for_label}}"
-              {% endif %}
-              {{ form.password.flat_attrs|safe }}
-              />
-      </div>
-    </div>
-    <p>{{form.errors}}</p>
-    {% if redirect_field_value %}
-    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-    {% endif %}
-    <button class="btn btn-primary btn-round" type="submit">{% trans "Sign In" %}</button>
   </div>
-</form>
+  {% endblock main_content %}
 
-{% endblock %}
-{% block javascript22 %}
+
+  {% block javascript %}
+
   <script type="text/javascript">
-    $(document).on('submit', '#logare', function(e){
+    $(document).on('submit', '#logare', function(e) {
       e.preventDefault();
 
-      $.ajax({
-        type: 'POST',
-        url: '/accounts/login/',
-        data:{
-          login:$('#id_login').val(),
-          password:$('#id_password').val(),
-          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
-        },
-        success:function(){
-          alert("{{request.user.username}}")
-        },
-        error:function(data){
-          console.log(data.status)
-        }
+      var login = $('#id_login');
+      var passw = $('#id_password');
+
+      login.keyup(function() {
+        $('i')[1].innerText = 'face';
       });
+      passw.keyup(function() {
+        $('i')[2].innerText = 'lock_outline';
+      });
+
+      if (login.val() === '' && passw.val() === '') {
+
+        $('i')[1].innerText = 'clear';
+        login.attr("placeholder", "Acest câmp este obligatoriu");
+
+        $('i')[2].innerText = 'clear';
+        passw.attr("placeholder", "Acest câmp este obligatoriu");
+
+      } else if (login.val() === '') {
+
+        $('i')[1].innerText = 'clear';
+        login.attr("placeholder", "Acest câmp este obligatoriu");
+
+        $('i')[2].innerText = 'lock_outline';
+        passw.attr("placeholder", "Parolă")
+
+      } else if (/\s/.test(login.val())) {
+        $('i')[1].innerText = 'clear';
+        login.attr("placeholder", "Spațiile nu sunt permise");
+
+        $('#name_error')[0].innerHTML = "<h4>Spațiile nu sunt permise în câmpul de utlizator</h4>";
+
+        $('i')[2].innerText = 'lock_outline';
+        passw.attr("placeholder", "Parolă")
+
+      } else if (passw.val() === '') {
+
+        $('i')[1].innerText = 'face';
+        login.attr("placeholder", "Utilizator");
+
+        $('i')[2].innerText = 'clear';
+        passw.attr("placeholder", "Acest câmp este obligatoriu")
+
+      } else {
+        $.ajax({
+          type: 'POST',
+          url: '{% url "account_login" %}',
+          data: {
+            login: login.val(),
+            password: passw.val(),
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+          },
+          success: function() {
+            window.location = '{% url "account_login" %}'
+          },
+          error: function() {
+            $('.social-line')[0].innerHTML = "<h4>Utilizator sau parolă incorecte</h4>";
+          }
+        });
+      };
     });
   </script>
-{% endblock %}
+  {% endblock javascript %}

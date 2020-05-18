@@ -1,13 +1,19 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
-
-from django.views.generic import DetailView, RedirectView, UpdateView, TemplateView
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django.http import HttpResponseRedirect, HttpResponseForbidden
+
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
+
+from django.shortcuts import render
+
+from django.views import View
+from django.views.generic import DetailView, RedirectView, UpdateView, TemplateView, FormView
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.edit import FormMixin
 
 from cookie_consent.util import get_cookie_value_from_request
 
@@ -15,21 +21,16 @@ from membership.models import UserMembership, Subcription, Membership
 from payment.extras import gateway, generate_client_token
 
 from allauth.account.views import SignupView
+from .forms import Profile
 
 
 class CustomSignupView(SignupView):
-
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        print(self.request.GET)
-
         nonce_token = generate_client_token()
-        context['nonce_token'] = nonce_token
-
         memberships = Membership.objects.all().order_by('order')
+        context['nonce_token'] = nonce_token
         context['memberships'] = memberships
-
 
         return context
 
@@ -53,10 +54,7 @@ def get_user_subscription(request):
 
 
 def get_selected_membership(request):
-
-    # membership_type = request.session['selected_membership_type']
     membership_type = request.user.member
-
     selected_membership_qs = Membership.objects.filter(
                                         membership_type=membership_type)
     if selected_membership_qs.exists():
@@ -83,23 +81,6 @@ class HomePageView(TemplateView):
                 context['subscription'] = subscription
         return context
 
-    # def post(self, request, **kwargs):
-    #     selected_membership_type = request.POST.get('membership_type')
-    #
-    #     print(request.POST)
-    #
-    #     selected_membership_qs = Membership.objects.filter(
-    #         membership_type=selected_membership_type
-    #     )
-    #
-    #     if selected_membership_qs.exists():
-    #         selected_membership = selected_membership_qs.first()
-    #
-    #     # assign to session
-    #     request.session['selected_membership_type'] = selected_membership.membership_type
-    #
-    #     return HttpResponseRedirect(reverse('recieve'))
-
 
 @login_required
 def PaymentView(request):
@@ -107,7 +88,6 @@ def PaymentView(request):
     payment_method_nonce = request.POST.get('payment_method_nonce')
 
     if payment_method_nonce:
-        print(payment_method_nonce)
 
         # Tip abonament selectat
         selected_membership = get_selected_membership(request)
@@ -124,7 +104,6 @@ def PaymentView(request):
             "payment_method_nonce": payment_method_nonce
         })
 
-        print(payment_token)
         result = gateway.subscription.create({
             "payment_method_token": payment_token.payment_method.token,
             "plan_id": memb.gateway_plan
@@ -146,14 +125,11 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
-    # slug_field = "username"
-    # slug_url_kwarg = "username"
+    template_name = 'users/user_detail.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         memberships = Membership.objects.all().order_by('order')
-
-
         subscription_qs = get_user_subscription(self.request)
         if subscription_qs:
             subscription = gateway.subscription.find(str(subscription_qs))
@@ -163,14 +139,14 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         user_membership = get_user_membership(self.request)
         customer = gateway.customer.find(user_membership.gateway_customer_id)
         context['customer'] = customer
-
-
         context['memberships'] = memberships
+        current_membership_test = get_user_membership(self.request)
 
         if self.request.user.is_authenticated:
             current_membership = get_user_membership(self.request)
             context['current_membership'] = str(current_membership.membership)
-
+            print(Profile())
+            context['form'] = Profile()
 
         nonce_token = generate_client_token()
         context['nonce_token'] = nonce_token
@@ -181,9 +157,48 @@ user_detail_view = UserDetailView.as_view()
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
-
     model = User
-    fields = ["name", "mobile_number", "date_of_birth"]
+    form_class = Profile
+    template_name = 'users/user_detail.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        memberships = Membership.objects.all().order_by('order')
+        subscription_qs = get_user_subscription(self.request)
+        if subscription_qs:
+            subscription = gateway.subscription.find(str(subscription_qs))
+            context['subscription'] = subscription
+
+        # braintree customer ID
+        user_membership = get_user_membership(self.request)
+        customer = gateway.customer.find(user_membership.gateway_customer_id)
+        context['customer'] = customer
+        context['memberships'] = memberships
+        current_membership_test = get_user_membership(self.request)
+
+        if self.request.user.is_authenticated:
+            current_membership = get_user_membership(self.request)
+            context['current_membership'] = str(current_membership.membership)
+
+        nonce_token = generate_client_token()
+        context['nonce_token'] = nonce_token
+        return context
+
+    def get_initial(self):
+        initial = super().get_initial()
+        # retrieve current object
+        habit_object = self.get_object()
+        initial['name'] = habit_object.name
+        initial['first_name'] = habit_object.first_name
+        initial['last_name'] = habit_object.last_name
+        initial['last_name'] = habit_object.last_name
+        initial['mobile_number'] = habit_object.mobile_number
+        initial['date_of_birth'] = habit_object.date_of_birth
+        initial['street1'] = habit_object.street1
+        initial['zip_code'] = habit_object.zip_code
+        initial['city'] = habit_object.city
+        initial['country'] = habit_object.country
+        return initial
 
     def get_success_url(self):
         return reverse("users:detail", kwargs={"username": self.request.user.username})
@@ -201,10 +216,20 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 user_update_view = UserUpdateView.as_view()
 
 
+class ProfilSocio(View):
+    def get(self, request, *args, **kwargs):
+        # view = UserDetailView.as_view()
+        view = UserUpdateView.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = UserUpdateView.as_view()
+        return view(request, *args, **kwargs)
+
+
 class UserRedirectView(LoginRequiredMixin, RedirectView):
 
     permanent = False
-
     def get_redirect_url(self):
         return reverse("users:detail", kwargs={"username": self.request.user.username})
 

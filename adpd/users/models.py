@@ -37,17 +37,17 @@ class User(AbstractUser):
 
     # First Name and Last Name do not cover name patterns
     # around the globe.
-    name = CharField(_("Name of User"), blank=True, max_length=255)
+    name = CharField(_("Name of User"), blank=True, max_length=30)
 
     # ---------Mobile phone field ------------------
     # error message when a wrong format entered
-    mobile_error_message = 'Phone number must be entered in the format: 05999999999'
+    mobile_error_message = 'Introdu doar cifre.'
 
     mobile_regex = RegexValidator(
-        regex=r'^\d{15}$',
+        regex=r'^\d{9,15}$',
         message=mobile_error_message
     )
-    mobile_number = CharField(validators=[mobile_regex], max_length=60,
+    mobile_number = CharField(validators=[mobile_regex], max_length=15,
                              null=True, blank=True)
 
     date_of_birth = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)

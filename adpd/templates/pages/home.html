@@ -11,27 +11,77 @@
 
     <div class="row" id="testing">
       <div class="d-none d-sm-none d-md-block col-md-3 align-self-center">
+        {% if request.user.is_authenticated %}
+        <img src="{% static 'images/default-avatar.png' %}" alt="Thumbnail Image" class="rounded-circle img-fluid">
+        {% else %}
         <img src="{% static 'images/logoADPD.png' %}" alt="Thumbnail Image" class="rounded-circle img-fluid">
+        {% endif %}
       </div>
       <div class="col-md-9">
         {% if request.user.is_authenticated %}
+        <div class="row">
+          <div class="col-md-12">
         <h1 class="title">{{request.user.username}}</h1>
-        <h1 class="title">Bine ai venit în familia Dinamo!</h1>
+        <!-- <h1 class="title">Bine ai venit în familia Dinamo!</h1> -->
         <h3>Planul tău curent <b>{{ current_membership }}</b>
           {% if subscription.status != 'Active' %}
           <b>nu este activ.</b> Îți poți plăti cotizația <a href="{% url 'users:detail' request.user.username %}"><b>aici</b></a>.</h3>
           {% else %}
           este valabil până la data de {{subscription.billing_period_end_date}}</h3>
           {% endif %}
+          </div>
+        </div>
         {% else %}
-        <h1 class="title">Totul pentru Dinamo!</h1>
-        <h4>De multă vreme noi, suporterii, avem nemulțumiri în legătură cu deciziile luate de către conducerea clubului. Lucrurile nu par să se îmbunătățească odată cu trecerea anilor, ci chiar să devină mai rele. În acest context, un grup de
-          suporteri a venit cu ideea de a da o voce relevantă tuturor celor ce iubesc Dinamo.<br>
-          Alătură-te ADPD și fă parte cu adevărat din istoria lui Dinamo!</h4>
-        {% endif %}
+        <div class="row">
+          <div class="col-md-12">
+            <h2 class="title" style="text-align:center;">Totul pentru Dinamo!</h2>
+          </div>
+        </div>
+        <div class="row">
+        <div class="col-sm-4">
+          <h2 class="title" style="text-align:center;">493</h2>
+          <h4 style="text-align:center;">membri cotizanți</h4>
+        </div>
+        <div class="col-sm-4">
+          <h2 class="title" style="text-align:center;">155.150</h2>
+          <h4 style="text-align:center;">sold cotizații</h4>
+        </div>
+        <div class="col-sm-4">
+          <h2 class="title" style="text-align:center;">36.666</h2>
+          <h4 style="text-align:center;">sold donații</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h4 class="title" style="text-align:center;">Alătură-te ADPD să faci parte cu adevărat din istoria lui Dinamo!</h4>
+        </div>
       </div>
 
+        {% endif %}
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+
     </div>
+  </div>
+
+
+    </div>
+    <!-- <div class="row">
+      <div class="col-md-4">
+        <h2 class="title" style="text-align:center;">493</h2>
+        <h4 style="text-align:center;">membri cotizanți</h4>
+      </div>
+      <div class="col-md-4">
+        <h2 class="title" style="text-align:center;">155.150</h2>
+        <h4 style="text-align:center;">sold cotizații</h4>
+      </div>
+      <div class="col-md-4">
+        <h2 class="title" style="text-align:center;">36.666</h2>
+        <h4 style="text-align:center;">sold donații</h4>
+      </div>
+    </div> -->
 
   </div>
 </div>

@@ -13,6 +13,26 @@ from membership.models import Membership
 
 User = get_user_model()
 
+
+class Profile(f.ModelForm):
+
+    date_of_birth = f.DateField(input_formats=('%d-%m-%Y',))
+
+    class Meta:
+        model = User
+        fields = ('name', 'mobile_number',
+                  'date_of_birth', 'street1', 'zip_code', 'city', 'country')
+
+        help_texts = {
+            'name': _('Introdu numele și prenumele'),
+        }
+        error_messages = {
+            'name': {
+                'max_length': _("Numărul maxim de caractere a fost depășit."),
+            },
+        }
+
+
 class MyCustomSignupForm(SignupForm):
     member = f.CharField(required=True)
     tos = f.BooleanField(required=True)
@@ -54,7 +74,7 @@ class UserChangeForm(forms.UserChangeForm):
 class UserCreationForm(forms.UserCreationForm):
 
     error_message = forms.UserCreationForm.error_messages.update(
-        {"duplicate_username": _("De aici? serios? This username has already been taken.")}
+        {"duplicate_username": _("Acest nume de utilizator este deja luat.")}
     )
 
     class Meta(forms.UserCreationForm.Meta):

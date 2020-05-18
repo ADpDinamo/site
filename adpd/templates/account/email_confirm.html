@@ -3,30 +3,29 @@
 {% load i18n %}
 {% load account %}
 
-{% block head_title %}{% trans "Confirm E-mail Address" %}{% endblock %}
+{% block head_title %}{% trans "Confirmă adresa de email" %}{% endblock %}
 
 
 {% block inner %}
-<h1>{% trans "Confirm E-mail Address" %}</h1>
+<h1>{% trans "Confirmă adresa de email" %}</h1>
 
 {% if confirmation %}
 
 {% user_display confirmation.email_address.user as user_display %}
 
-<p>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}</p>
+<p>{% blocktrans with confirmation.email_address.email as email %}Te rugăm să confirmi că <a href="mailto:{{ email }}">{{ email }}</a> este adresa de email a utilizatorului {{ user_display }}.{% endblocktrans %}</p>
 
 <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
 {% csrf_token %}
-    <button class="btn btn-primary" type="submit">{% trans 'Confirm' %}</button>
+    <button class="btn btn-primary" type="submit">{% trans 'Confirmă' %}</button>
 </form>
 
 {% else %}
 
 {% url 'account_email' as email_url %}
 
-<p>{% blocktrans %}This e-mail confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktrans %}</p>
+<p>{% blocktrans %}Acest link de confimare a expirat sau este invalid. Retrimite <a href="{{ email_url }}">pentru confirmare</a>.{% endblocktrans %}</p>
 
 {% endif %}
 
 {% endblock %}
-

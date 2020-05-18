@@ -457,3 +457,66 @@
   left:calc(50% - 50px);
   top:8px;
 } */
+
+
+@font-face {
+  font-family: 'fontCard';
+  src: url('../fonts/evogria/Evogria.otf');
+}
+
+
+img {
+    display: block;
+}
+
+.id-card-socio-container {
+  position: relative;
+  display: inline-block;
+}
+
+.card-socio {
+  border-radius: 25px !important;
+}
+
+.card-text-block-name {
+  position: absolute;
+  top: 80%;
+  left: 3%;
+  transform: translate( 0%, -50% );
+  color: #000000;
+}
+
+.card-text-block-name h4 {
+  font-family: 'fontCard';
+  /* font-size: 1.25vw; */
+}
+
+.card-text-block-socio-nr {
+  position: absolute;
+  top: 80%;
+  left: 67%;
+  transform: translate( 0%, -50% );
+  color: #000000;
+}
+
+.card-text-block-socio-nr h4 {
+  font-family: 'fontCard';
+  /* font-size: 1.25vw; */
+}
+
+svg {
+  width: 100%;
+}
+
+svg text {
+  font-family: 'fontCard';
+}
+
+a {
+  color: #f00;
+}
+
+
+.has-success .form-control-feedback {
+  color: #4caf50;
+}
